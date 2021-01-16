@@ -1,21 +1,33 @@
 <template>
-    <div class="manage_article">
-        <div class="table">
-            <div class="table_title row">
-                <div class="createTime">創建時間</div>
-                <div class="title">標題</div>
-                <div class="content">內容</div>
-                <div class="operation">操作</div>
+    <div>
+        <div>
+            <div class="flex">
+                <div class="item font-bold">創建時間</div>
+                <div class="item font-bold">標題</div>
+                <div class="item font-bold">內容</div>
+                <div class="item font-bold">操作</div>
             </div>
-            <div v-for="list in articles" :key="list.id" class="row">
-                <div class="createTime">
+            <div v-for="list in articles" :key="list.id" class="flex">
+                <div class="item">
                     {{ $timeFormat.formatDateTime(list.createTime) }}
                 </div>
-                <div class="title">{{ list.title }}</div>
-                <div class="content">{{ list.content }}</div>
-                <div class="operation">
-                    <span class="btn" @click="updateHandle(list.id)">編輯</span>
-                    <span class="btn" @click="deleteHandle(list.id)">刪除</span>
+                <div class="item">
+                    {{ list.title }}
+                </div>
+                <div class="item">
+                    {{ list.content }}
+                </div>
+                <div class="item">
+                    <span
+                        class="btn btn-secondary hover:btn-secondary"
+                        @click="updateHandle(list.id)"
+                        >編輯</span
+                    >
+                    <span
+                        class="btn btn-primary hover:btn-primary"
+                        @click="deleteHandle(list.id)"
+                        >刪除</span
+                    >
                 </div>
             </div>
         </div>
@@ -48,51 +60,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.manage_article {
-    .table {
-        .table_title {
-            font-weight: 600;
-        }
-        .row {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            > div {
-                padding: 16px;
-                width: 25%;
-            }
-            .createTime {
-                max-width: 180px;
-            }
-            .title,
-            .content {
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                flex-grow: 1;
-            }
-            .operation {
-                max-width: 180px;
-                .btn:first-child {
-                    margin-right: 16px;
-                }
-            }
-        }
-    }
+.item {
+    @apply overflow-hidden whitespace-nowrap overflow-ellipsis p-4 w-1/4 text-center;
 }
-// table {
-//     width: 100%;
-// }
-// tr {
-//     width: 100%;
-//     overflow: hidden;
-// }
-// td {
-//     width: 100px;
-//     span {
-//         overflow: hidden;
-//         white-space: nowrap;
-//         text-overflow: ellipsis;
-//     }
-// }
 </style>

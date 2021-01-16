@@ -10,14 +10,16 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'AddArticle',
     layout: 'backstage',
+    meta: {
+        layout: 'backstage',
+    },
     methods: {
         async submit(params: object) {
             try {
                 await this.$store.dispatch('createArticle', params);
+                this.$router.push('/backstage/manageArticle');
             } catch (e) {}
         },
     },
 });
 </script>
-
-<style lang="scss" scoped></style>

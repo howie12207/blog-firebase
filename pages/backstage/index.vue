@@ -8,7 +8,8 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'Backstage',
     layout: 'backstage',
+    meta: {
+        layout: 'backstage',
+    },
 });
 </script>
-
-<style lang="scss" scoped></style>

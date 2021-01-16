@@ -13,6 +13,9 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'ManageArticle',
     layout: 'backstage',
+    meta: {
+        layout: 'backstage',
+    },
     data() {
         return {
             articles: [],
@@ -39,5 +42,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped></style>

@@ -15,6 +15,9 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'ManageArticleId',
     layout: 'backstage',
+    meta: {
+        layout: 'backstage',
+    },
     data() {
         return {
             article: {},
@@ -31,6 +34,7 @@ export default Vue.extend({
                 const id = this.$route.path.split('/manageArticle/')[1];
                 params.id = id;
                 await this.$store.dispatch('updateArticle', params);
+                this.$router.push('/backstage/manageArticle');
             } catch (e) {}
         },
         async getArticle() {
@@ -43,5 +47,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped></style>

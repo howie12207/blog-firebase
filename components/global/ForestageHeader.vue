@@ -1,11 +1,13 @@
 <template>
-    <header class="header">
-        <div class="btn" @click="popup('login')">
-            <i class="el-icon-user icon"></i>登入
+    <header
+        class="fixed z-10 w-full h-14 flex justify-end bg-gray-600 items-center"
+    >
+        <div class="btn btn-primary hover:btn-primary" @click="popup('login')">
+            <i class="el-icon-user icon"></i> 登入
         </div>
         <Popup v-if="popupTarget === 'login'" @close="closePopup">
             <template #layer>
-                <Login @login="login" />
+                <Login v-on="$listeners" />
             </template>
         </Popup>
     </header>
@@ -28,31 +30,7 @@ export default Vue.extend({
         closePopup() {
             this.popupTarget = '';
         },
-        login(params: object) {
-            this.$emit('login', params);
-        },
         register() {},
     },
 });
 </script>
-
-<style lang="scss" scoped>
-.header {
-    position: fixed;
-    height: $num * 7;
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    background-color: $gray3;
-
-    .btn {
-        display: flex;
-        align-items: center;
-        margin-right: 16px;
-        .icon {
-            margin-right: 8px;
-        }
-    }
-}
-</style>

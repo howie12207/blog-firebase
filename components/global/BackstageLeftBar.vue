@@ -1,10 +1,10 @@
 <template>
-    <nav class="left_bar">
+    <nav class="w-60 py-10 min-h-screen bg-gray-200">
         <nuxt-link
             v-for="item in menu"
             :key="item.route"
             :to="item.route"
-            class="nav_item"
+            class="block text-red-700 p-2"
         >
             {{ item.label }}
         </nuxt-link>
@@ -27,15 +27,3 @@ export default Vue.extend({
     methods: {},
 });
 </script>
-
-<style lang="scss" scoped>
-.left_bar {
-    width: 250px;
-    min-height: 100vh;
-    background-color: #ccc;
-    .nav_item {
-        display: block;
-        cursor: pointer;
-    }
-}
-</style>

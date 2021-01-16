@@ -1,19 +1,21 @@
 <template>
-    <article class="article">
-        <div class="time">
-            <div class="create_time">
+    <div class="p-20">
+        <div class="flex justify-between text-xs text-gray-400">
+            <div>
                 建立時間：
                 {{ $timeFormat.formatDateTime(article.createTime) }}
             </div>
-            <div class="update_time">
+            <div>
                 最近一次更新時間：
                 {{ $timeFormat.formatDateTime(article.updateTime) }}
             </div>
         </div>
-        <div class="title">{{ article.title }}</div>
+        <div class="text-4xl my-8 text-red-700 font-black">
+            {{ article.title }}
+        </div>
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="content" v-html="article.content"></div>
-    </article>
+    </div>
 </template>
 
 <script lang="ts">
@@ -29,27 +31,17 @@ export default Vue.extend({
     },
 });
 </script>
-
 <style lang="scss" scoped>
-.article {
-    background-color: #fff;
-    padding: 80px 160px 0;
-    .time {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        margin-bottom: 8px;
-        color: $gray2;
+::v-deep .content {
+    p {
+        @apply my-4;
+        text-indent: 2rem;
     }
-    .title {
-        font-size: 24px;
-        font-weight: 900;
-        line-height: 2;
-        color: $gray4;
+    li {
+        @apply my-2 ml-8 text-sm list-disc;
     }
-    .content {
-        font-size: 16px;
-        color: $gray4;
+    pre {
+        @apply rounded py-2 px-4 bg-black text-white whitespace-pre-wrap;
     }
 }
 </style>

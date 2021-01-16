@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="min-h-screen w-3/5 m-auto">
         <ArticleCard v-for="card in articles" :key="card.id" :article="card" />
     </div>
 </template>
@@ -17,11 +17,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped>
-.home {
-    min-height: 100vh;
-    width: 400px;
-    margin: auto;
-}
-</style>

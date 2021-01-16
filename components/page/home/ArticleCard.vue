@@ -1,12 +1,19 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
-    <article class="article">
-        <div class="create_time">
+    <article class="my-4">
+        <div class="text-right text-xs mb-2">
             {{ $timeFormat.formatDate(article.createTime) }}
         </div>
-        <div class="title">{{ article.title }}</div>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="content" v-html="article.content"></div>
-        <nuxt-link :to="`/article/${article.id}`" class="more"
+        <div class="text-4xl mb-8 text-red-700 font-black">
+            {{ article.title }}
+        </div>
+        <div
+            class="content overflow-hidden overflow-ellipsis max-h-40"
+            v-html="article.content"
+        ></div>
+        <nuxt-link
+            :to="`/article/${article.id}`"
+            class="text-red-400 underline inline-block my-1"
             >閱讀全文..</nuxt-link
         >
     </article>
@@ -27,38 +34,19 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.article {
-    background-color: #fff;
-    padding: 16px;
-    margin-bottom: 40px;
-    .create_time {
-        font-size: 12px;
-        margin-bottom: 8px;
-        color: $gray2;
+::v-deep .content {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    p {
+        @apply my-4;
+        text-indent: 2rem;
     }
-    .title {
-        font-size: 24px;
-        font-weight: 900;
-        line-height: 2;
-        color: $gray4;
+    li {
+        @apply my-2 ml-8 text-sm list-disc;
     }
-    .content {
-        max-height: 120px;
-        font-size: 16px;
-        line-height: 1.5;
-        color: $gray4;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
-    }
-    .more {
-        display: inline-block;
-        margin: 16px 0;
-        text-align: right;
-        text-decoration: underline;
-        cursor: pointer;
+    pre {
+        @apply rounded py-2 px-4 bg-black text-white whitespace-pre-wrap;
     }
 }
 </style>

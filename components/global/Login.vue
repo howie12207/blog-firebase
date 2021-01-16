@@ -1,5 +1,5 @@
 <template>
-    <div class="login">
+    <div>
         <BaseInput
             v-model="mail.value"
             label="電子信箱"
@@ -13,9 +13,16 @@
             :is-valid.sync="password.isValid"
             :rules="password.rules"
         />
-        <div class="row">
-            <div class="btn blue_btn" @click="login">登入</div>
-            <div class="btn orange_btn" @click="register">註冊</div>
+        <div class="flex justify-evenly">
+            <div class="btn btn-primary hover:btn-primary" @click="login">
+                登入
+            </div>
+            <div
+                class="btn btn-secondary hover:btn-secondary"
+                @click="register"
+            >
+                註冊
+            </div>
         </div>
     </div>
 </template>
@@ -66,18 +73,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped>
-.login {
-    .row {
-        display: flex;
-        justify-content: space-evenly;
-        .blue_btn {
-            background-color: $blue4;
-        }
-        .orange_btn {
-            background-color: $orange;
-        }
-    }
-}
-</style>

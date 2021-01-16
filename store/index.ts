@@ -1,6 +1,16 @@
 import { db, auth } from '@/plugins/firebase.ts';
 const dataSite = 'blog';
 
+interface paramsType {
+    mail: string;
+    password: string;
+    title: string;
+    content: string;
+    createTime: number;
+    updateTime: number;
+    id: string;
+}
+
 export const state = () => ({
     login: false,
 });
@@ -11,10 +21,24 @@ export const mutations = {
 };
 
 export const actions = {
-    async login(store: any, params: { mail: string; password: string }) {
+    async login(store: any, params: paramsType) {
         try {
-            await auth.signInWithEmailAndPassword(params.mail, params.password);
+            await auth()
+                .setPersistence(auth.Auth.Persistence.NONE)
+                .then(() =>
+                    auth().signInWithEmailAndPassword(
+                        params.mail,
+                        params.password
+                    )
+                );
             store.commit('LOGIN', true);
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    },
+    async logout() {
+        try {
+            await auth().signOut();
         } catch (e) {
             return Promise.reject(e);
         }
@@ -41,22 +65,12 @@ export const actions = {
             return Promise.reject(e);
         }
     },
-    createArticle(
+    async createArticle(
         _: any,
-        {
-            title,
-            content,
-            createTime,
-            updateTime,
-        }: {
-            title: string;
-            content: string;
-            createTime: number;
-            updateTime: number;
-        }
+        { title, content, createTime, updateTime }: paramsType
     ) {
         try {
-            db.collection(dataSite).add({
+            await db.collection(dataSite).add({
                 title,
                 content,
                 createTime,
@@ -74,25 +88,25 @@ export const actions = {
             return Promise.reject(e);
         }
     },
-    updateArticle(_: any, params: any) {
+    async updateArticle(_: any, params: paramsType) {
         try {
-            const param = { ...params };
+            const param: any = { ...params };
             delete param.id;
-            db.doc(`${dataSite}/${params.id}`).set(param);
+            await db.doc(`${dataSite}/${params.id}`).set(param);
         } catch (e) {
             return Promise.reject(e);
         }
     },
-    deleteArticle(_: any, params: string) {
+    async deleteArticle(_: any, params: string) {
         try {
-            db.doc(`${dataSite}/${params}`).delete();
+            await db.doc(`${dataSite}/${params}`).delete();
         } catch (e) {
             return Promise.reject(e);
         }
     },
     checkLogin(store: any) {
         try {
-            auth.onAuthStateChanged((user: any) => {
+            auth().onAuthStateChanged((user: any) => {
                 if (user) {
                     store.commit('LOGIN', true);
                 } else {

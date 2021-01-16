@@ -1,0 +1,34 @@
+/* ./assets/css/tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h1 {
+        @apply text-2xl font-bold my-2;
+    }
+
+    @layer components {
+        .btn {
+            @apply px-4 py-1 transition-all cursor-pointer rounded text-center;
+        }
+        .btn-primary {
+            @apply text-red-500 border border-red-500;
+        }
+        .btn-primary:hover {
+            @apply bg-red-500 text-white;
+        }
+        .btn-primary-active {
+            @apply bg-red-500 text-white;
+        }
+        .btn-secondary {
+            @apply text-blue-500 border border-blue-500;
+        }
+        .btn-secondary:hover {
+            @apply bg-blue-500 text-white;
+        }
+        .btn-secondary-active {
+            @apply bg-blue-500 text-white;
+        }
+    }
+}

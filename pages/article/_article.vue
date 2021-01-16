@@ -8,7 +8,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-    name: 'Home',
+    name: 'ArticleId',
     layout: 'forestage',
     data() {
         return {
@@ -32,5 +32,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped></style>

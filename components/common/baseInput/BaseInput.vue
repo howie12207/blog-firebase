@@ -1,8 +1,11 @@
 <template>
-    <div class="base_input">
-        <label class="input_label">{{ label }}</label>
-        <div class="row_right">
-            <div class="input_block">
+    <div :class="['base_input', { multi_line: multiLine }]">
+        <div class="left">
+            <div class="input_label top">{{ label }}</div>
+            <div class="left_bottom bottom"></div>
+        </div>
+        <div class="right">
+            <div :class="['input_block', 'top']">
                 <input
                     v-model="syncValue"
                     :type="type"
@@ -12,12 +15,12 @@
                     :class="[
                         'input_content',
                         {
-                            error: !isLimitPass || (errorMessage && clearFlag),
+                            error: blurInput && (!isValid || errorMessage),
                         },
                         { clear_btn: clearBtn },
                     ]"
                     @keyup="onKeyup(value)"
-                    @change="onChange(value)"
+                    @blur="onBlur(value)"
                     @keydown="onKeydown"
                 />
                 <div
@@ -28,20 +31,25 @@
                     <i class="el-icon-circle-close"></i>
                 </div>
             </div>
-            <div class="error_message">
-                <div v-if="!isLimitPass && !errorMessage" class="error">
+            <div class="error_message bottom">
+                <div
+                    v-if="blurInput && !isValid && !errorMessage"
+                    class="error"
+                >
                     <span v-if="rules.min && rules.max">{{
                         '請輸入' + rules.min + ' ~ ' + rules.max + rulesLimit
                     }}</span>
-                    <span v-if="rules.only">{{
+                    <span v-else-if="rules.only">{{
                         '請輸入' + rules.only + '個數字'
                     }}</span>
-                    <span v-if="rules.limit === 'mail'">電子信箱格式錯誤</span>
-                    <span v-if="rules.atLeast"
-                        >请输入至少 {{ rules.atLeast }} 個字元</span
+                    <span v-else-if="rules.atLeast">{{
+                        '請輸入至少' + rules.atLeast + '個字元'
+                    }}</span>
+                    <span v-else-if="rules.limit === 'mail'"
+                        >電子信箱格式錯誤</span
                     >
                 </div>
-                <div v-if="errorMessage && clearFlag" class="error">
+                <div v-else-if="errorMessage && blurInput" class="error">
                     {{ errorMessage }}
                 </div>
             </div>
@@ -49,7 +57,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -99,13 +107,15 @@ export default Vue.extend({
             type: Boolean,
             default: true,
         },
+        multiLine: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
             blurInput: false,
             error: null,
-            isLimitPass: true,
-            clearFlag: true,
             clearBtnShow: false,
         };
     },
@@ -114,7 +124,7 @@ export default Vue.extend({
             get() {
                 return this.value;
             },
-            set(value: string) {
+            set(value) {
                 if (this.upperCase) {
                     this.$emit('input', value.toUpperCase());
                 } else {
@@ -127,22 +137,23 @@ export default Vue.extend({
                 ? '位英文或數字'
                 : this.rules.limit === 'number'
                 ? '位數字'
+                : this.rules.limit === 'en'
+                ? '位英文'
                 : '個字元';
         },
     },
     methods: {
-        onChange(value: string) {
+        onBlur(value) {
             if (!this.blurInput) this.blurInput = true;
             this.validate(value);
-            this.$emit('change', value);
+            this.$emit('onBlur', value);
         },
-        onKeyup(value: string) {
-            if (this.blurInput) this.validate(value);
-            if (!this.clearFlag) this.clearFlag = true;
+        onKeyup(value) {
             this.clearBtnShow = value.length > 0;
             this.$emit('onKeyup', value);
+            this.$nextTick(() => this.validate(value));
         },
-        onKeydown(e: any) {
+        onKeydown(e) {
             if (this.rules.limit === 'number') {
                 if (
                     e.keyCode === 190 ||
@@ -154,22 +165,26 @@ export default Vue.extend({
                 }
             }
         },
-        validate(value: string) {
+        validate(value) {
+            let isValid = true;
             if (Object.keys(this.rules).length > 0 && value) {
-                const langLimit = this.langRules(value, this.rules.limit);
-                const textLimit = this.textLengthRules(value);
-                this.isLimitPass = langLimit && textLimit && !this.errorMessage;
+                const typeLimit = this.typeRules(value, this.rules.limit);
+                const lengthLimit = this.lengthRules(value);
+                isValid = typeLimit && lengthLimit && !this.errorMessage;
             }
             if (!value) {
-                this.isLimitPass = false;
-                if (this.notRequired) this.isLimitPass = true;
+                isValid = false;
+                if (this.notRequired) isValid = true;
             }
-            this.$emit('update:isValid', this.isLimitPass);
+            this.$emit('update:isValid', isValid);
         },
-        langRules(value: string, type: string): boolean {
-            const METHOD: any = {
+        typeRules(value, type) {
+            const METHOD = {
                 enAndNumber() {
                     return /^[a-zA-Z0-9]*$/.test(value);
+                },
+                en() {
+                    return /^[a-zA-Z]*$/.test(value);
                 },
                 number() {
                     return !/[^0-9]/.test(value);
@@ -184,7 +199,7 @@ export default Vue.extend({
                 METHOD[type]()
             );
         },
-        textLengthRules(value: string) {
+        lengthRules(value) {
             if (this.rules.min && this.rules.max) {
                 return (
                     value.length >= this.rules.min &&
@@ -199,8 +214,7 @@ export default Vue.extend({
         },
         clear() {
             this.syncValue = '';
-            this.isLimitPass = true;
-            this.clearFlag = false;
+            this.blurInput = false;
             this.clearBtnShow = false;
             this.$emit('update:isValid', this.notRequired);
         },
@@ -211,57 +225,60 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .base_input {
     display: flex;
-    /* max-width: 640px; */
+    flex-wrap: wrap;
+    &.multi_line {
+        display: block;
+    }
     font-size: 14px;
-    color: #45494c;
-    .input_label {
-        width: 64px;
+    color: #6b7280;
+    .top {
         height: 40px;
         line-height: 40px;
     }
-    .row_right {
-        flex-grow: 1;
+    .input_label {
+        min-width: 80px;
     }
     .input_block {
         position: relative;
-        box-shadow: 0 2px 5px 0 rgba(15, 39, 51, 0.2);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         .input_content {
             width: 100%;
-            height: 40px;
-            line-height: 40px;
+            height: 100%;
             padding: 0 32px 0 16px;
-            border: 1px solid transparent;
+            border: 1px solid#D1D5DB;
             border-radius: 4px;
             transition: 0.3s;
             outline: none;
             &:focus {
-                border: 1px solid #409eff;
+                border: 1px solid #3b82f6;
             }
             &.error {
-                border: 1px solid #ff4d4d;
+                border: 1px solid #ef4444;
             }
         }
         .clear {
             position: absolute;
-            vertical-align: top;
             right: 10px;
-            top: 10px;
+            top: 0;
             width: 16px;
             height: 16px;
             font-size: 14px;
             cursor: pointer;
-            transition: 0.3;
+            transition: 0.3s;
             &:hover {
                 opacity: 0.8;
             }
         }
     }
     .error_message {
-        height: 32px;
-        padding: 8px 0;
+        height: 12px;
         font-size: 12px;
-        color: #ff4d4d;
+        margin: 8px 0;
+        color: #ef4444;
+    }
+    * {
+        box-sizing: border-box;
     }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ModifyArticle @submit="submit" />
+        <ModifyArticle v-on="$listeners" />
     </div>
 </template>
 
@@ -9,12 +9,5 @@ import Vue from 'vue';
 
 export default Vue.extend({
     name: 'AddArticlePage',
-    methods: {
-        submit(params: object) {
-            this.$emit('submit', params);
-        },
-    },
 });
 </script>
-
-<style lang="scss" scoped></style>

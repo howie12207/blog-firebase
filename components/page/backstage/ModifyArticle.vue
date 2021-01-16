@@ -1,20 +1,32 @@
 <template>
-    <div class="add_article">
+    <div class="p-4">
         <BaseInput
             v-model="title.value"
             label="標題"
             :is-valid.sync="title.isValid"
         />
-        <div class="label">內容</div>
-        <div class="row">
+        <div class="text-sm text-gray-500">內容</div>
+        <div class="flex my-4">
             <div
-                :class="['btn', { active: contentTab === 'html' }]"
+                :class="[
+                    'btn',
+                    'btn-primary',
+                    'hover:btn-primary',
+                    'mr-4',
+                    { 'btn-primary-active': contentTab === 'html' },
+                ]"
                 @click="changeTab('html')"
             >
                 HTML
             </div>
             <div
-                :class="['btn', { active: contentTab === 'editor' }]"
+                :class="[
+                    'btn',
+                    'btn-secondary',
+                    'hover:btn-secondary',
+                    ,
+                    { 'btn-secondary-active': contentTab === 'editor' },
+                ]"
                 @click="changeTab('editor')"
             >
                 文本編輯
@@ -31,11 +43,15 @@
             v-else
             v-quill:myQuillEditor="editorOption"
             :content="content"
-            class="quill-editor"
-            style="height: 500px"
+            style="height: 480px"
             @change="onEditorChange($event)"
         ></div>
-        <div class="btn" @click="submit">送出</div>
+        <div
+            class="btn btn-primary hover:btn-primary w-20 my-4"
+            @click="submit"
+        >
+            送出
+        </div>
     </div>
 </template>
 
@@ -125,5 +141,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped></style>
