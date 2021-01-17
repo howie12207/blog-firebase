@@ -64,7 +64,10 @@ export const actions = {
     async getArticles() {
         try {
             const articles = [] as any;
-            const res = await db.collection(articleSite).get();
+            const res = await db
+                .collection(articleSite)
+                .orderBy('createTime', 'desc')
+                .get();
             res.forEach((doc: any) => {
                 const appData = doc.data();
                 articles.push({
@@ -76,9 +79,7 @@ export const actions = {
                     sorts: appData.sorts,
                 });
             });
-            return articles.sort(
-                (a: any, b: any) => b.createTime - a.createTime
-            );
+            return articles;
         } catch (e) {
             return Promise.reject(e);
         }

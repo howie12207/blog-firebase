@@ -1,16 +1,11 @@
 const routerBase =
     process.env.DEPLOY_ENV === 'GH_PAGES'
         ? {
-              router: {
-                  mode: 'hash',
-                  base: '/blog/',
-              },
+              mode: 'hash',
+              base: '/blog/',
+              middleware: ['index'],
           }
-        : {
-              router: {
-                  middleware: ['index'],
-              },
-          };
+        : {};
 
 export default {
     // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -57,5 +52,10 @@ export default {
     build: {
         transpile: [/^element-ui/],
     },
-    ...routerBase,
+    router: {
+        scrollBehavior() {
+            return { x: 0, y: 0 };
+        },
+        ...routerBase,
+    },
 };

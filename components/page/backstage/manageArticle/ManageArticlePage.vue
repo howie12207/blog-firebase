@@ -29,6 +29,17 @@
                 >
             </div>
         </div>
+        <el-pagination
+            v-if="pageOption.total"
+            class="text-center mb-8"
+            background
+            layout="prev, pager, next"
+            :total="pageOption.total"
+            :page-size="pageOption.size"
+            :current-page="pageOption.page"
+            @current-change="handleCurrentChange"
+        >
+        </el-pagination>
     </div>
 </template>
 
@@ -42,6 +53,14 @@ export default Vue.extend({
             type: Array,
             default: () => [],
         },
+        pageOption: {
+            type: Object,
+            default: () => ({
+                page: 1,
+                size: 0,
+                total: 0,
+            }),
+        },
     },
     data() {
         return {};
@@ -52,6 +71,9 @@ export default Vue.extend({
         },
         deleteHandle(id: string) {
             this.$emit('deleteArticle', id);
+        },
+        handleCurrentChange(page: number) {
+            this.$emit('handleCurrentChange', page);
         },
     },
 });
