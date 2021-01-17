@@ -6,7 +6,7 @@
             :to="item.route"
             class="block text-red-700 p-2"
         >
-            {{ item.label }}
+            {{ item.title }}
         </nuxt-link>
     </nav>
 </template>
@@ -19,8 +19,9 @@ export default Vue.extend({
     data() {
         return {
             menu: [
-                { label: '新增文章', route: '/backstage/addArticle' },
-                { label: '管理文章', route: '/backstage/manageArticle' },
+                { title: '新增文章', route: '/backstage/addArticle' },
+                { title: '管理文章', route: '/backstage/manageArticle' },
+                { title: '管理分類', route: '/backstage/manageSort' },
             ],
         };
     },

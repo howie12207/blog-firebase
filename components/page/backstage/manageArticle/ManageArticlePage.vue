@@ -1,34 +1,32 @@
 <template>
     <div>
-        <div>
-            <div class="flex">
-                <div class="item font-bold">創建時間</div>
-                <div class="item font-bold">標題</div>
-                <div class="item font-bold">內容</div>
-                <div class="item font-bold">操作</div>
+        <div class="flex">
+            <div class="item font-bold">創建時間</div>
+            <div class="item font-bold">標題</div>
+            <div class="item font-bold">內容</div>
+            <div class="item font-bold">操作</div>
+        </div>
+        <div v-for="list in articles" :key="list.id" class="flex">
+            <div class="item">
+                {{ $timeFormat.formatDateTime(list.createTime) }}
             </div>
-            <div v-for="list in articles" :key="list.id" class="flex">
-                <div class="item">
-                    {{ $timeFormat.formatDateTime(list.createTime) }}
-                </div>
-                <div class="item">
-                    {{ list.title }}
-                </div>
-                <div class="item">
-                    {{ list.content }}
-                </div>
-                <div class="item">
-                    <span
-                        class="btn btn-secondary hover:btn-secondary"
-                        @click="updateHandle(list.id)"
-                        >編輯</span
-                    >
-                    <span
-                        class="btn btn-primary hover:btn-primary"
-                        @click="deleteHandle(list.id)"
-                        >刪除</span
-                    >
-                </div>
+            <div class="item">
+                {{ list.title }}
+            </div>
+            <div class="item">
+                {{ list.content }}
+            </div>
+            <div class="item">
+                <span
+                    class="btn btn-secondary hover:btn-secondary"
+                    @click="updateHandle(list.id)"
+                    >編輯</span
+                >
+                <span
+                    class="btn btn-primary hover:btn-primary"
+                    @click="deleteHandle(list.id)"
+                    >刪除</span
+                >
             </div>
         </div>
     </div>

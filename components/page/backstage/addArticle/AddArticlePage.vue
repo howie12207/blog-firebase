@@ -1,6 +1,6 @@
 <template>
     <div>
-        <ModifyArticle v-on="$listeners" />
+        <ModifyArticle v-bind="$attrs" v-on="$listeners" />
     </div>
 </template>
 

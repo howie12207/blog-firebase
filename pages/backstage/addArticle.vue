@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <AddArticlePage @submit="submit" />
+        <AddArticlePage :sorts="sorts" @submit="submit" />
     </div>
 </template>
 
@@ -13,7 +13,23 @@ export default Vue.extend({
     meta: {
         layout: 'backstage',
     },
+    data() {
+        return {
+            sorts: [],
+        };
+    },
+    created() {
+        if (process.client) {
+            this.getSorts();
+        }
+    },
     methods: {
+        async getSorts() {
+            try {
+                const res = await this.$store.dispatch('getSorts');
+                this.sorts = res;
+            } catch (e) {}
+        },
         async submit(params: object) {
             try {
                 await this.$store.dispatch('createArticle', params);

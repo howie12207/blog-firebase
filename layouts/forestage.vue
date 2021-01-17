@@ -1,7 +1,7 @@
 <template>
     <div class="fore_stage">
         <ForestageHeader @login="login" @register="register" />
-        <div class="row">
+        <div class="flex m-auto max-w-7xl pt-14">
             <Nuxt class="forestage_bottom" />
             <ForestageRightBar />
         </div>
@@ -25,14 +25,3 @@ export default Vue.extend({
     },
 });
 </script>
-
-<style lang="scss" scoped>
-.row {
-    display: flex;
-    padding-top: $num * 7;
-    margin: auto;
-    max-width: 1400px;
-}
-.forestage_bottom {
-}
-</style>

@@ -1,5 +1,6 @@
 import { db, auth } from '@/plugins/firebase.ts';
-const dataSite = 'blog';
+const articleSite = 'blog';
+const sortSite = 'sort';
 
 interface paramsType {
     mail: string;
@@ -9,6 +10,7 @@ interface paramsType {
     createTime: number;
     updateTime: number;
     id: string;
+    sorts: string[];
 }
 
 export const state = () => ({
@@ -43,19 +45,35 @@ export const actions = {
             return Promise.reject(e);
         }
     },
+    async createArticle(
+        _: any,
+        { title, content, createTime, updateTime, sorts }: paramsType
+    ) {
+        try {
+            await db.collection(articleSite).add({
+                title,
+                content,
+                createTime,
+                updateTime,
+                sorts,
+            });
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    },
     async getArticles() {
         try {
             const articles = [] as any;
-            const res = await db.collection(dataSite).get();
+            const res = await db.collection(articleSite).get();
             res.forEach((doc: any) => {
                 const appData = doc.data();
-                const title = appData.title as any;
                 articles.push({
                     id: doc.id,
-                    title,
+                    title: appData.title,
                     content: appData.content,
                     createTime: appData.createTime,
                     updateTime: appData.updateTime,
+                    sorts: appData.sorts,
                 });
             });
             return articles.sort(
@@ -65,24 +83,9 @@ export const actions = {
             return Promise.reject(e);
         }
     },
-    async createArticle(
-        _: any,
-        { title, content, createTime, updateTime }: paramsType
-    ) {
-        try {
-            await db.collection(dataSite).add({
-                title,
-                content,
-                createTime,
-                updateTime,
-            });
-        } catch (e) {
-            return Promise.reject(e);
-        }
-    },
     async getArticle(_: any, params: number) {
         try {
-            const res = await db.doc(`${dataSite}/${params}`).get();
+            const res = await db.doc(`${articleSite}/${params}`).get();
             return { ...res.data(), id: res.id };
         } catch (e) {
             return Promise.reject(e);
@@ -92,14 +95,58 @@ export const actions = {
         try {
             const param: any = { ...params };
             delete param.id;
-            await db.doc(`${dataSite}/${params.id}`).set(param);
+            await db.doc(`${articleSite}/${params.id}`).set(param);
         } catch (e) {
             return Promise.reject(e);
         }
     },
     async deleteArticle(_: any, params: string) {
         try {
-            await db.doc(`${dataSite}/${params}`).delete();
+            await db.doc(`${articleSite}/${params}`).delete();
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    },
+    async createSort(_: any, { title, createTime }: paramsType) {
+        try {
+            await db.collection(sortSite).add({
+                title,
+                createTime,
+            });
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    },
+    async getSorts() {
+        try {
+            const sorts = [] as any;
+            const res = await db.collection(sortSite).get();
+            res.forEach((doc: any) => {
+                const appData = doc.data();
+                const title = appData.title as any;
+                sorts.push({
+                    id: doc.id,
+                    title,
+                    createTime: appData.createTime,
+                });
+            });
+            return sorts.sort((a: any, b: any) => b.createTime - a.createTime);
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    },
+    async updateSort(_: any, params: paramsType) {
+        try {
+            const param: any = { ...params };
+            delete param.id;
+            await db.doc(`${sortSite}/${params.id}`).set(param);
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    },
+    async deleteSort(_: any, params: string) {
+        try {
+            await db.doc(`${sortSite}/${params}`).delete();
         } catch (e) {
             return Promise.reject(e);
         }

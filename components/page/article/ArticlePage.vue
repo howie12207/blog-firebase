@@ -1,5 +1,6 @@
 <template>
-    <div class="p-20">
+    <div class="article p-20">
+        <Breadcrumbs class="mb-4" :nav="nav" />
         <div class="flex justify-between text-xs text-gray-400">
             <div>
                 建立時間：
@@ -15,6 +16,14 @@
         </div>
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="content" v-html="article.content"></div>
+        <div class="text-gray-500">
+            <span
+                v-for="(item, index) in article.sorts"
+                :key="index"
+                class="mr-2"
+                >#{{ item }}</span
+            >
+        </div>
     </div>
 </template>
 
@@ -29,19 +38,13 @@ export default Vue.extend({
             default: () => ({}),
         },
     },
+    computed: {
+        nav() {
+            return [
+                { title: '首頁', route: '/' },
+                { title: (this as any).article?.title, route: '' },
+            ];
+        },
+    },
 });
 </script>
-<style lang="scss" scoped>
-::v-deep .content {
-    p {
-        @apply my-4;
-        text-indent: 2rem;
-    }
-    li {
-        @apply my-2 ml-8 text-sm list-disc;
-    }
-    pre {
-        @apply rounded py-2 px-4 bg-black text-white whitespace-pre-wrap;
-    }
-}
-</style>

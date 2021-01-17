@@ -3,6 +3,7 @@
         <ModifyArticle
             target="modify"
             :article="article"
+            :sorts="sorts"
             @submit="updateArticle"
             @getArticle="getArticle"
         />
@@ -21,20 +22,20 @@ export default Vue.extend({
     data() {
         return {
             article: {},
+            sorts: [],
         };
     },
     async created() {
         if (process.client) {
+            await this.getSorts();
             await this.getArticle();
         }
     },
     methods: {
-        async updateArticle(params: { id: string }) {
+        async getSorts() {
             try {
-                const id = this.$route.path.split('/manageArticle/')[1];
-                params.id = id;
-                await this.$store.dispatch('updateArticle', params);
-                this.$router.push('/backstage/manageArticle');
+                const res = await this.$store.dispatch('getSorts');
+                this.sorts = res;
             } catch (e) {}
         },
         async getArticle() {
@@ -42,6 +43,14 @@ export default Vue.extend({
                 const id = this.$route.path.split('/manageArticle/')[1];
                 const res = await this.$store.dispatch('getArticle', id);
                 this.article = res;
+            } catch (e) {}
+        },
+        async updateArticle(params: { id: string }) {
+            try {
+                const id = this.$route.path.split('/manageArticle/')[1];
+                params.id = id;
+                await this.$store.dispatch('updateArticle', params);
+                this.$router.push('/backstage/manageArticle');
             } catch (e) {}
         },
     },

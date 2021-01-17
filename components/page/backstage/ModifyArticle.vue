@@ -5,6 +5,14 @@
             label="標題"
             :is-valid.sync="title.isValid"
         />
+        <div class="text-sm text-gray-500">分類</div>
+        <el-checkbox-group v-model="checkList" class="my-4">
+            <el-checkbox
+                v-for="(item, index) in sorts"
+                :key="index"
+                :label="item.title"
+            ></el-checkbox>
+        </el-checkbox-group>
         <div class="text-sm text-gray-500">內容</div>
         <div class="flex my-4">
             <div
@@ -69,6 +77,10 @@ export default Vue.extend({
             type: Object,
             default: () => ({}),
         },
+        sorts: {
+            type: Array,
+            default: () => [],
+        },
     },
     data() {
         return {
@@ -102,6 +114,7 @@ export default Vue.extend({
                     },
                 },
             },
+            checkList: [],
         };
     },
     watch: {
@@ -109,6 +122,7 @@ export default Vue.extend({
             this.title.value = this.article.title;
             this.title.isValid = true;
             this.content = this.article.content;
+            this.checkList = this.article.sorts ? this.article.sorts : [];
         },
     },
     methods: {
@@ -136,6 +150,7 @@ export default Vue.extend({
                 content: this.content,
                 createTime: this.target ? this.article.createTime : now,
                 updateTime: now,
+                sorts: this.checkList,
             });
         },
     },
