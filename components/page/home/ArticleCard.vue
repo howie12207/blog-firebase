@@ -4,7 +4,7 @@
         <div class="text-right text-xs mb-2">
             {{ $timeFormat.formatDate(article.createTime) }}
         </div>
-        <div class="text-3xl mb-8 text-red-700 font-black">
+        <div class="text-3xl mb-2 text-red-700 font-black">
             {{ article.title }}
         </div>
         <div
